@@ -4,7 +4,7 @@
 library(haven)
 library(dplyr)
 
-setwd("C:/Users/Marisa Montoya}/OneDrive/Escritorio/Mineria de datos")
+setwd("C:\Users\Marisa Montoya}\proyecto1")
 x2009 <- read_sav("2009.sav")
 x2010 <- read_sav("2010.sav")
 x2011 <- read_sav("2011.sav")
@@ -192,23 +192,39 @@ hist(x= Tohinmm, main=paste("Histograma de Tohinm"), xlim= range(0,5))
 #total de hijos tenidos vivos
 Tohivii <- as.numeric(levels(total$Tohivi))[total$Tohivi]
 hist(x= Tohivii, main=paste("Histograma de Tohivi"), xlim= range(0,15))
-
+#edad del padre
 hist(x= total$Edadp, main=paste("Histograma de Edadp"))
-
+#edad de la madre
 hist(x= total$Edadm, main=paste("Histograma de Edadm"))
 
 #tablas de frecuencia de variables categoricas
 #install.packages("epiDisplay")
 library(epiDisplay)
+#departamento de registro
 tab1(total$Depreg, sort.group = "decreasing")
+#municipio de registro
 table(total$Mupreg)
+#mes de registro
 tab1(total$Mesreg, sort.group = "decreasing")
+#tipo de inscripcion
+tab1(total$TipoIns, sort.group = "decreasing")
+#año de registro
 tab1(total$Añoreg, sort.group = "decreasing")
+#departamento de ocurrencia
 tab1(total$Depocu, sort.group = "decreasing")
+#municipio de ocurrencia
 table(total$Mupocu)
+#area geografica de ocurrencia
 tab1(total$Areag, sort.group = "decreasing")
+#dia de ocurrencia
 tab1(total$Diaocu, sort.group = "decreasing")
+#mes de ocurrencia
 tab1(total$Mesocu, sort.group = "decreasing")
+#sexo del bebe
 tab1(total$Sexo, sort.group = "decreasing")
+#tipo de parto
 tab1(total$Tipar, sort.group = "decreasing")
-
+#Via parto
+tab1(total$ViaPar, sort.group = "decreasing")
+#pais de residencia del padre
+table(total$Paisrep)
