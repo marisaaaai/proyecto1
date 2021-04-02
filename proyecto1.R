@@ -228,3 +228,21 @@ tab1(total$Tipar, sort.group = "decreasing")
 tab1(total$ViaPar, sort.group = "decreasing")
 #pais de residencia del padre
 table(total$Paisrep)
+#departamento de residencia del padre
+tab1(total$Deprep, sort.group = "decreasing")
+#municipio de residencia del padre
+table(total$Muprep)
+#Puebloe tnico del padre
+tab1(total$PuebloPP, sort.group = "decreasing")
+#estado civil del padre
+tab1(total$Escivp, sort.group = "decreasing")
+#pais de nacimeinto del padre
+tab1(total$Paisnacp, sort.group = "decreasing")
+#municipio de nacimiento del padre
+table(total$Mupnap)
+#nacionalidad del padre
+tab1(total$Naciop, sort.group = "decreasing")
+#escolaridad del padre
+tab1(total$Escolap, sort.group = "decreasing")
+#ocupacion del padre
+table(total$Ocupap)
