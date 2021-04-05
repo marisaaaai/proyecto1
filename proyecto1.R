@@ -8,6 +8,8 @@ library(NbClust) #Para determinar el número de clusters óptimo
 library(factoextra) #Para hacer gráficos bonitos de clustering
 library(fpc) #para hacer el plotcluster
 library(cluster) #Para calcular la silueta
+library(e1071)
+library(mclust)
 
 
 setwd("C:/Users/LUIS PEDRO/proyecto1")
@@ -146,7 +148,7 @@ datosx2016 <- (x2016 %>% select(Depreg, Mupreg, Mesreg, TipoIns, Añoreg, Depocu,
 datosx2017 <- (x2017 %>% select(Depreg, Mupreg, Mesreg, TipoIns, Añoreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, Añoocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
 datosx2018 <- (x2018 %>% select(Depreg, Mupreg, Mesreg, TipoIns, Añoreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, Añoocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
 datosx2019 <- (x2019 %>% select(Depreg, Mupreg, Mesreg, TipoIns, Añoreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, Añoocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
-
+view(datosx2011)
 
 totx2009 <- datosx2009 %>%
   mutate_if(is.labelled, list(as_factor))
@@ -180,7 +182,21 @@ total$Edadm<- as.numeric(factor(total$Edadm))
 total$Edadm <- ifelse(total$Edadm >=2000, 0, total$Edadm)
 total$Edadp<- as.numeric(factor(total$Edadp))
 total$Edadp <- ifelse(total$Edadp >=2000, 0, total$Edadp)
+total$Libras<- as.numeric(factor(total$Libras))
+total$Libras <- ifelse(total$Libras >=99, 0, total$Libras)
+total$Onzas<- as.numeric(factor(total$Onzas))
+total$Onzas <- ifelse(total$Onzas>=99, 0, total$Onzas)
+total$Añoocu<- as.numeric(factor(total$Añoocu))
+total$Tohite<- as.numeric(factor(total$Tohite))
+total$Tohite <- ifelse(total$Tohite >=99, 0, total$Tohite)
+total$Tohivi<- as.numeric(factor(total$Tohivi))
+total$Tohivi <- ifelse(total$Tohivi >=99, 0, total$Tohivi)
+total$Tohinm<- as.numeric(factor(total$Tohinm))
+total$Tohinm <- ifelse(total$Tohinm >=99, 0, total$Tohinm)
+total$Añoreg <- as.numeric(factor(total$Añoreg))                       
 total$Añoreg <- ifelse(total$Añoreg == 9, 2009, ifelse(total$Añoreg == 10, 2010, total$Añoreg))
+view(datosx2009)
+
 #Histograma de variables cuant
 #año de ocurrencia de embarazo
 hist(x= total$Añoocu, main=paste("Histograma de Añoocu"))
@@ -286,6 +302,16 @@ tab1(total$Sitioocu, sort.group = "decreasing")
 #Filtro de la base de datos
 menores<- total %>% filter(Edadm <= 18, Edadm >=10)
 menores2 <- total %>% filter(Edadm <=9)
+str(menores)
+head(menores)
+tail(menores)
+any(is.na(menores$Tohivi))
+
+
+
+menoresomit1 <- na.omit(menores)
+summary(menoresomit1)
+any(is.na(menoresomit1))
 #Cruce de variables
 #Cruce de edades
 plot(x=menores$Edadm,y=menores$Edadp)
@@ -313,280 +339,51 @@ tab1(menores$Escolam,sort.group = "decreasing")
 tab1(menores2$Escolam,sort.group = "decreasing")
 tab1(menores$Edadm,sort.group = "decreasing")
 tab1(menores2$Edadm,sort.group = "decreasing")
+
+tab1(menores$Deprem,sort.group = "decreasing")
+tab1(menores2$Deprem,sort.group = "decreasing")
+tab1(menores$Libras,sort.group = "decreasing")
+tab1(menores$Onzas,sort.group = "decreasing")
+tab1(menores2$Libras,sort.group = "decreasing")
+tab1(menores2$Onzas,sort.group = "decreasing")
+
+tab1(menores$Tohite, sort.group = "decreasing")
+tab1(menores2$Tohite, sort.group = "decreasing")
 #Base de datos a usar es menores para clustering
 #Diagrama de codo para saber cuantos grupos hacer
 
-#Diagrama de codo 2009
-wss <- (nrow(datosx2009[,c(5,9,10,13,17,29,43,44,45)])-1)*sum(apply(datosx2009[,c(5,9,10,13,17,29,43,44,45)],2,var))
+#Diagrama de codo de menores
+wss <- (nrow(menoresomit1[,c(5,9,10,13,17,29,43,44,45)])-1)*sum(apply(menoresomit1[,c(5,9,10,13,17,29,43,44,45)],2,var))
 
 for (i in 2:10) 
-  wss[i] <- sum(kmeans(datosx2009[,c(5,9,10,13,17,29,43,44,45)], centers=i)$withinss)
+  wss[i] <- sum(kmeans(menoresomit1[,c(5,9,10,13,17,29,43,44,45)], centers=i)$withinss)
 
-plot(1:10, wss, type="b", xlab="Number of Clusters (2009)",  ylab="Within groups sum of squares")
-
-#Diagrama de codo 2010
-wss <- (nrow(datosx2010[,c(5,9,10,13,17,29,43,44,45)])-1)*sum(apply(datosx2010[,c(5,9,10,13,17,29,43,44,45)],2,var))
-
-for (i in 2:10) 
-  wss[i] <- sum(kmeans(datosx2010[,c(5,9,10,13,17,29,43,44,45)], centers=i)$withinss)
-
-plot(1:10, wss, type="b", xlab="Number of Clusters (2010)",  ylab="Within groups sum of squares")
-
-#Diagrama de codo 2011
-wss <- (nrow(datosx2011[,c(5,9,10,13,17,29,43,44,45)])-1)*sum(apply(datosx2011[,c(5,9,10,13,17,29,43,44,45)],2,var))
-
-for (i in 2:10) 
-  wss[i] <- sum(kmeans(datosx2011[,c(5,9,10,13,17,29,43,44,45)], centers=i)$withinss)
-
-plot(1:10, wss, type="b", xlab="Number of Clusters (2011)",  ylab="Within groups sum of squares")
-
-
-#Diagrama de codo 2012
-wss <- (nrow(datosx2012[,c(5,9,10,13,17,29,43,44,45)])-1)*sum(apply(datosx2012[,c(5,9,10,13,17,29,43,44,45)],2,var))
-
-for (i in 2:10) 
-  wss[i] <- sum(kmeans(datosx2012[,c(5,9,10,13,17,29,43,44,45)], centers=i)$withinss)
-
-plot(1:10, wss, type="b", xlab="Number of Clusters (2012)",  ylab="Within groups sum of squares")
-
-#Diagrama de codo 2013
-wss <- (nrow(datosx2013[,c(5,9,10,13,17,29,43,44,45)])-1)*sum(apply(datosx2013[,c(5,9,10,13,17,29,43,44,45)],2,var))
-
-for (i in 2:10) 
-  wss[i] <- sum(kmeans(datosx2013[,c(5,9,10,13,17,29,43,44,45)], centers=i)$withinss)
-
-plot(1:10, wss, type="b", xlab="Number of Clusters (2013)",  ylab="Within groups sum of squares")
-
-#Diagrama de codo 2014
-wss <- (nrow(datosx2014[,c(5,9,10,13,17,29,43,44,45)])-1)*sum(apply(datosx2014[,c(5,9,10,13,17,29,43,44,45)],2,var))
-
-for (i in 2:10) 
-  wss[i] <- sum(kmeans(datosx2014[,c(5,9,10,13,17,29,43,44,45)], centers=i)$withinss)
-
-plot(1:10, wss, type="b", xlab="Number of Clusters (2014)",  ylab="Within groups sum of squares")
-#Diagrama de codo 2015
-wss <- (nrow(datosx2015[,c(5,9,10,13,17,29,43,44,45)])-1)*sum(apply(datosx2015[,c(5,9,10,13,17,29,43,44,45)],2,var))
-
-for (i in 2:10) 
-  wss[i] <- sum(kmeans(datosx2015[,c(5,9,10,13,17,29,43,44,45)], centers=i)$withinss)
-
-plot(1:10, wss, type="b", xlab="Number of Clusters (2015)",  ylab="Within groups sum of squares")
-#Diagrama de codo 2016
-wss <- (nrow(datosx2016[,c(5,9,10,13,17,29,43,44,45)])-1)*sum(apply(datosx2016[,c(5,9,10,13,17,29,43,44,45)],2,var))
-
-for (i in 2:10) 
-  wss[i] <- sum(kmeans(datosx2016[,c(5,9,10,13,17,29,43,44,45)], centers=i)$withinss)
-
-plot(1:10, wss, type="b", xlab="Number of Clusters (2016)",  ylab="Within groups sum of squares")
-#Diagrama de codo 2017
-wss <- (nrow(datosx2017[,c(5,9,10,13,17,29,43,44,45)])-1)*sum(apply(datosx2017[,c(5,9,10,13,17,29,43,44,45)],2,var))
-
-for (i in 2:10) 
-  wss[i] <- sum(kmeans(datosx2017[,c(5,9,10,13,17,29,43,44,45)], centers=i)$withinss)
-
-plot(1:10, wss, type="b", xlab="Number of Clusters (2017)",  ylab="Within groups sum of squares")
-#Diagrama de codo 2018
-wss <- (nrow(datosx2018[,c(5,9,10,13,17,29,43,44,45)])-1)*sum(apply(datosx2018[,c(5,9,10,13,17,29,43,44,45)],2,var))
-
-for (i in 2:10) 
-  wss[i] <- sum(kmeans(datosx2018[,c(5,9,10,13,17,29,43,44,45)], centers=i)$withinss)
-
-plot(1:10, wss, type="b", xlab="Number of Clusters (2018)",  ylab="Within groups sum of squares")
-#Diagrama de codo 2019
-wss <- (nrow(datosx2019[,c(5,9,10,13,17,29,43,44,45)])-1)*sum(apply(datosx2019[,c(5,9,10,13,17,29,43,44,45)],2,var))
-
-for (i in 2:10) 
-  wss[i] <- sum(kmeans(datosx2019[,c(5,9,10,13,17,29,43,44,45)], centers=i)$withinss)
-
-plot(1:10, wss, type="b", xlab="Number of Clusters (2019)",  ylab="Within groups sum of squares")
+plot(1:10, wss, type="b", xlab="Number of Clusters (menores)",  ylab="Within groups sum of squares")
 
 
 
 #Clustering por k-Means
-#Cluster 2009 
-datos<-datosx2009
-datos2009completos<-datosx2009[complete.cases(datosx2009),]
-km<-kmeans(datosx2009[,c(5,9,10,13,17,29,43,44,45)],3,iter.max =100)
+#Cluster menores
+datos<-menoresomit1
+datosmenorescompletos<-menoresomit1[complete.cases(menoresomit1),]
+km<-kmeans(menoresomit1[,c(5,9,10,13,17,29,43,44,45)],2,iter.max =100)
 datos$grupo<-km$cluster
 
 g1<- datos[datos$grupo==1,]
-prop.table(table(g1$Edadm))*100
+prop.table(table(g1$Edadp))*100
 nrow(g1)
 summary(g1)
 
 g2<- datos[datos$grupo==2,]
-prop.table(table(g2$Edadm))*100
-g3<- datos[datos$grupo==3,]
-prop.table(table(g3$Edadm))*100
-
-plotcluster(datosx2009[,c(5,9,10,13,17,29,43,44,45)],km$cluster) #grafica la ubicaciÃ³n de los clusters
-#Cluster 2010
-datos<-datosx2010
-datos2010completos<-datosx2010[complete.cases(datosx2010),]
-km<-kmeans(datosx2010[,c(5,9,10,13,17,29,43,44,45)],2,iter.max =100)
-datos$grupo<-km$cluster
-
-g1<- datos[datos$grupo==1,]
-prop.table(table(g1$Edadm))*100
-nrow(g1)
-summary(g1)
-
-g2<- datos[datos$grupo==2,]
-prop.table(table(g2$Edadm))*100
+prop.table(table(g2$Edadp))*100
+nrow(g2)
+summary(g2)
 
 
-plotcluster(datosx2010[,c(5,9,10,13,17,29,43,44,45)],km$cluster) #grafica la ubicaciÃ³n de los clusters
+plotcluster(menoresomit1[,c(5,9,10,13,17,29,43,44,45)],km$cluster) #grafica la ubicaciÃ³n de los clusters
 
-#Cluster 2011
-datos<-datosx2011
-datos2011completos<-datosx2011[complete.cases(datosx2011),]
-km<-kmeans(datosx2011[,c(5,9,10,13,17,29,43,44,45)],2,iter.max =100)
-datos$grupo<-km$cluster
-
-g1<- datos[datos$grupo==1,]
-prop.table(table(g1$Edadm))*100
-nrow(g1)
-summary(g1)
-
-g2<- datos[datos$grupo==2,]
-prop.table(table(g2$Edadm))*100
-
-
-plotcluster(datosx2011[,c(5,9,10,13,17,29,43,44,45)],km$cluster) 
-
-#Cluster 2012
-datos<-datosx2012
-datos2012completos<-datosx2012[complete.cases(datosx2012),]
-km<-kmeans(datosx2012[,c(5,9,10,13,17,29,43,44,45)],2,iter.max =100)
-datos$grupo<-km$cluster
-
-g1<- datos[datos$grupo==1,]
-prop.table(table(g1$Edadm))*100
-nrow(g1)
-summary(g1)
-
-g2<- datos[datos$grupo==2,]
-prop.table(table(g2$Edadm))*100
-
-
-plotcluster(datosx2012[,c(5,9,10,13,17,29,43,44,45)],km$cluster) 
-#Cluster 2013
-datos<-datosx2013
-datos2013completos<-datosx2013[complete.cases(datosx2013),]
-km<-kmeans(datosx2013[,c(5,9,10,13,17,29,43,44,45)],2,iter.max =100)
-datos$grupo<-km$cluster
-
-g1<- datos[datos$grupo==1,]
-prop.table(table(g1$Edadm))*100
-nrow(g1)
-summary(g1)
-
-g2<- datos[datos$grupo==2,]
-prop.table(table(g2$Edadm))*100
-
-
-plotcluster(datosx2013[,c(5,9,10,13,17,29,43,44,45)],km$cluster) 
-#Cluster 2014
-datos<-datosx2014
-datos2014completos<-datosx2014[complete.cases(datosx2014),]
-km<-kmeans(datosx2014[,c(5,9,10,13,17,29,43,44,45)],2,iter.max =100)
-datos$grupo<-km$cluster
-
-g1<- datos[datos$grupo==1,]
-prop.table(table(g1$Edadm))*100
-nrow(g1)
-summary(g1)
-
-g2<- datos[datos$grupo==2,]
-prop.table(table(g2$Edadm))*100
-
-
-plotcluster(datosx2014[,c(5,9,10,13,17,29,43,44,45)],km$cluster)
-#Cluster 2015
-datos<-datosx2015
-datos2015completos<-datosx2015[complete.cases(datosx2015),]
-km<-kmeans(datosx2015[,c(5,9,10,13,17,29,43,44,45)],2,iter.max =100)
-datos$grupo<-km$cluster
-
-g1<- datos[datos$grupo==1,]
-prop.table(table(g1$Edadm))*100
-nrow(g1)
-summary(g1)
-
-g2<- datos[datos$grupo==2,]
-prop.table(table(g2$Edadm))*100
-
-
-plotcluster(datosx2015[,c(5,9,10,13,17,29,43,44,45)],km$cluster)
-#Cluster 2016
-datos<-datosx2016
-datos2016completos<-datosx2016[complete.cases(datosx2016),]
-km<-kmeans(datosx2016[,c(5,9,10,13,17,29,43,44,45)],2,iter.max =100)
-datos$grupo<-km$cluster
-
-g1<- datos[datos$grupo==1,]
-prop.table(table(g1$Edadm))*100
-nrow(g1)
-summary(g1)
-
-g2<- datos[datos$grupo==2,]
-prop.table(table(g2$Edadm))*100
-
-
-plotcluster(datosx2016[,c(5,9,10,13,17,29,43,44,45)],km$cluster)
-#Cluster 2017
-datos<-datosx2017
-datos2017completos<-datosx2017[complete.cases(datosx2017),]
-km<-kmeans(datosx2017[,c(5,9,10,13,17,29,43,44,45)],2,iter.max =100)
-datos$grupo<-km$cluster
-
-g1<- datos[datos$grupo==1,]
-prop.table(table(g1$Edadm))*100
-nrow(g1)
-summary(g1)
-
-g2<- datos[datos$grupo==2,]
-prop.table(table(g2$Edadm))*100
-
-
-plotcluster(datosx2017[,c(5,9,10,13,17,29,43,44,45)],km$cluster)
-#Cluster 2018
-datos<-datosx2018
-datos2018completos<-datosx2018[complete.cases(datosx2018),]
-km<-kmeans(datosx2018[,c(5,9,10,13,17,29,43,44,45)],2,iter.max =100)
-datos$grupo<-km$cluster
-
-g1<- datos[datos$grupo==1,]
-prop.table(table(g1$Edadm))*100
-nrow(g1)
-summary(g1)
-
-g2<- datos[datos$grupo==2,]
-prop.table(table(g2$Edadm))*100
-
-
-plotcluster(datosx2018[,c(5,9,10,13,17,29,43,44,45)],km$cluster)
-#Cluster 2019
-datos<-datosx2019
-datos2019completos<-datosx2019[complete.cases(datosx2019),]
-km<-kmeans(datosx2019[,c(5,9,10,13,17,29,43,44,45)],2,iter.max =100)
-datos$grupo<-km$cluster
-
-g1<- datos[datos$grupo==1,]
-prop.table(table(g1$Edadm))*100
-nrow(g1)
-summary(g1)
-
-g2<- datos[datos$grupo==2,]
-prop.table(table(g2$Edadm))*100
-
-
-plotcluster(datosx2019[,c(5,9,10,13,17,29,43,44,45)],km$cluster)
 
 #Evaluacion de silueta
 
-#Silueta 2009
-silkm<-silhouette(km$cluster,dist(datosx2009[,c(5,9,10,13,17,29,43,44,45)]))
-mean(silkm[,3])
 
 
