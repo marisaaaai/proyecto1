@@ -10,9 +10,14 @@ library(fpc) #para hacer el plotcluster
 library(cluster) #Para calcular la silueta
 library(e1071)
 library(mclust)
+library(rpart)
+library(caret)
+library(tree)
+library(rpart.plot)
+library(randomForest)
 
-
-setwd("C:/Users/LUIS PEDRO/proyecto1")
+#setwd("C:/Users/LUIS PEDRO/proyecto1")
+setwd("C:/Users/Marisa Montoya}/proyecto1")
 x2009 <- read_sav("2009.sav")
 x2010 <- read_sav("2010.sav")
 x2011 <- read_sav("2011.sav")
@@ -195,7 +200,7 @@ total$Tohinm<- as.numeric(factor(total$Tohinm))
 total$Tohinm <- ifelse(total$Tohinm >=99, 0, total$Tohinm)
 total$Añoreg <- as.numeric(factor(total$Añoreg))                       
 total$Añoreg <- ifelse(total$Añoreg == 9, 2009, ifelse(total$Añoreg == 10, 2010, total$Añoreg))
-view(datosx2009)
+#view(datosx2009)
 
 #Histograma de variables cuant
 #año de ocurrencia de embarazo
@@ -271,7 +276,6 @@ tab1(total$Escolap, sort.group = "decreasing")
 #ocupacion del padre
 table(total$Ocupap)
 
-#Codigo no corrido
 #pais residencia de la madre
 table(total$Paisrem)
 #Departamento residencia de la madre
@@ -382,8 +386,40 @@ summary(g2)
 
 plotcluster(menoresomit1[,c(5,9,10,13,17,29,43,44,45)],km$cluster) #grafica la ubicaciÃ³n de los clusters
 
+#la base de datos ha usar es menores
+menores<- menores %>% filter(Edadp >=10)
 
-#Evaluacion de silueta
+menores$OnzasLib <- menores$Onzas * 0.0625
+menores$pesoBebe <- menores$Libras + menores$OnzasLib
+menores$ClasPeso <- ifelse(menores$pesoBebe <=5.29109, "BajoPeso", ifelse(menores$pesoBebe <=9.47988, "PesoIdeal", "SobrePeso"))
+menores$ClasPeso <- as.factor(menores$ClasPeso)
+set.seed(123)
+porciento<-0.7
+datos<-subset(menores, select = -c(9,10,46,47) )
+datos$Paisnacm <-as.factor(datos$Paisnacm)
+datos$Escolam <-as.factor(datos$Escolam)
+datos$Paisrem <-as.factor(datos$Paisrem)
+datos$Escolap <-as.factor(datos$Escolap)
+datos$Paisnacp <-as.factor(datos$Paisnacp)
+datos$Paisrep <-as.factor(datos$Paisrep)
+datos$ViaPar <-as.factor(datos$ViaPar)
+datos$TipoIns <-as.factor(datos$TipoIns)
+#20 escivp
+datos<-subset(datos, select = -c(1:3,8:10,20,21,24,26,41) )
+trainRowsNumber<-sample(1:nrow(datos),porciento*nrow(datos))
+train<-datos[trainRowsNumber,]
+test<-datos[-trainRowsNumber,]
 
+#Arbol de clasificacion
+decisiontree <- train(ClasPeso ~ ., data=train, method="rpart", trControl = trainControl(method = "cv"), na.action= na.exclude)
+arbolModeloClasificacion<-rpart(ClasPeso~.,train,method = "class")
 
+#NaiveBayes
+modelo<-naiveBayes(train$ClasPeso~., data=train)
+modelo 
+summary(modelo)
+predBayes<-predict(modelo, newdata = test[,1:32])
+cm<-caret::confusionMatrix(predBayes,test$ClasPeso)
+cm #La eficiencia del Naive Bayes es de 0.7734
 
+#red neuronal
