@@ -422,4 +422,3 @@ predBayes<-predict(modelo, newdata = test[,1:32])
 cm<-caret::confusionMatrix(predBayes,test$ClasPeso)
 cm #La eficiencia del Naive Bayes es de 0.7734
 
-#red neuronal
