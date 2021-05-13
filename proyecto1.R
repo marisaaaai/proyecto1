@@ -4,8 +4,8 @@
 library(haven)
 library(dplyr)
 library(tidyverse)
-library(NbClust) #Para determinar el número de clusters óptimo
-library(factoextra) #Para hacer gráficos bonitos de clustering
+library(NbClust) #Para determinar el nÃºmero de clusters Ã³ptimo
+library(factoextra) #Para hacer grÃ¡ficos bonitos de clustering
 library(fpc) #para hacer el plotcluster
 library(cluster) #Para calcular la silueta
 library(e1071)
@@ -43,10 +43,10 @@ x2009$Paisrem <- 9999
 x2009$PuebloPM <- x2009$Gretnm
 x2009$Paisnacm <- 9999
 x2009$Escolam <- 9
-x2009$Añoocu <- 2009
+x2009$AÃ±oocu <- 2009
 
 #Arreglos del dataset 2010
-x2010$Añoocu <- 2010
+x2010$AÃ±oocu <- 2010
 x2010$Mupreg <- x2010$mupreg
 x2010$TipoIns <- 0
 x2010$ViaPar <-0
@@ -62,7 +62,7 @@ x2010$PuebloPM <- x2010$grupetma
 x2010$Paisnacm <- 9999
 
 #Arreglo de 2011
-x2011$Añoocu <- 2011
+x2011$AÃ±oocu <- 2011
 x2011$TipoIns <- 0
 x2011$ViaPar <-0
 x2011$PuebloPP <- x2011$Gretnp
@@ -81,7 +81,7 @@ x2012$Areag <- 9
 x2012$PuebloPP <- x2012$Gretnp
 x2012$PuebloPM <- x2012$grupetma
 x2012$Mupnam <- x2012$munnam
-x2012$Añoocu <- 2012
+x2012$AÃ±oocu <- 2012
 
 #Arreglo 2013
 x2013$TipoIns <- 0
@@ -89,7 +89,7 @@ x2013$ViaPar <-0
 x2013$Areag <- 9
 x2013$Ocupap <- x2013$Ciuopad
 x2013$Ocupam <- x2013$Ciuomad
-x2013$Añoocu <- 2013
+x2013$AÃ±oocu <- 2013
 
 #Arreglo 2014
 x2014$TipoIns <- 0
@@ -98,16 +98,16 @@ x2014$Areag <- 9
 x2014$Mupnap <- x2014$Munpnap
 x2014$Naciop <- 9999
 x2014$Naciom <- 9999
-x2014$Añoocu <- 2014
+x2014$AÃ±oocu <- 2014
 x2014$Ocupam <- x2014$ciuomad
-x2014$Añoocu <- 2014
+x2014$AÃ±oocu <- 2014
 
 #Arreglo 2015
 x2015$Areag <- 9
 x2015$Naciop <- 9999
 x2015$Naciom <- 9999
 x2015$Mupnap <- x2015$Munpnap
-x2015$Añoocu <- 2015
+x2015$AÃ±oocu <- 2015
 
 
 #Arreglo 2016
@@ -115,7 +115,7 @@ x2016$Areag <- 9
 x2016$Naciop <- 9999
 x2016$Naciom <- 9999
 x2016$Mupnap <- x2016$Munpnap
-x2016$Añoocu <- 2016
+x2016$AÃ±oocu <- 2016
 
 
 #Arreglo 2017
@@ -123,7 +123,7 @@ x2017$Areag <- 9
 x2017$Naciop <- 9999
 x2017$Naciom <- 9999
 x2017$Mupnap <- x2017$Munpnap
-x2017$Añoocu <- 2017
+x2017$AÃ±oocu <- 2017
 
 
 #Arreglo 2018
@@ -131,7 +131,7 @@ x2018$Areag <- 9
 x2018$Naciop <- 9999
 x2018$Naciom <- 9999
 x2018$Mupnap <- x2018$Munpnap
-x2018$Añoocu <- 2018
+x2018$AÃ±oocu <- 2018
 
 
 #Arreglo 2019
@@ -139,20 +139,20 @@ x2019$Areag <- 9
 x2019$Naciop <- 9999
 x2019$Naciom <- 9999
 x2019$Mupnap <- x2019$Munpnap
-x2019$Añoocu <- 2019
+x2019$AÃ±oocu <- 2019
 
 
-datosx2009 <- (x2009 %>% select(Depreg, Mupreg, Mesreg, TipoIns, Añoreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, Añoocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
-datosx2010 <- (x2010 %>% select(Depreg, Mupreg, Mesreg, TipoIns, Añoreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, Añoocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
-datosx2011 <- (x2011 %>% select(Depreg, Mupreg, Mesreg, TipoIns, Añoreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, Añoocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
-datosx2012 <- (x2012 %>% select(Depreg, Mupreg, Mesreg, TipoIns, Añoreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, Añoocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
-datosx2013 <- (x2013 %>% select(Depreg, Mupreg, Mesreg, TipoIns, Añoreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, Añoocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
-datosx2014 <- (x2014 %>% select(Depreg, Mupreg, Mesreg, TipoIns, Añoreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, Añoocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
-datosx2015 <- (x2015 %>% select(Depreg, Mupreg, Mesreg, TipoIns, Añoreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, Añoocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
-datosx2016 <- (x2016 %>% select(Depreg, Mupreg, Mesreg, TipoIns, Añoreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, Añoocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
-datosx2017 <- (x2017 %>% select(Depreg, Mupreg, Mesreg, TipoIns, Añoreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, Añoocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
-datosx2018 <- (x2018 %>% select(Depreg, Mupreg, Mesreg, TipoIns, Añoreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, Añoocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
-datosx2019 <- (x2019 %>% select(Depreg, Mupreg, Mesreg, TipoIns, Añoreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, Añoocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
+datosx2009 <- (x2009 %>% select(Depreg, Mupreg, Mesreg, TipoIns, AÃ±oreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, AÃ±oocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
+datosx2010 <- (x2010 %>% select(Depreg, Mupreg, Mesreg, TipoIns, AÃ±oreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, AÃ±oocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
+datosx2011 <- (x2011 %>% select(Depreg, Mupreg, Mesreg, TipoIns, AÃ±oreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, AÃ±oocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
+datosx2012 <- (x2012 %>% select(Depreg, Mupreg, Mesreg, TipoIns, AÃ±oreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, AÃ±oocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
+datosx2013 <- (x2013 %>% select(Depreg, Mupreg, Mesreg, TipoIns, AÃ±oreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, AÃ±oocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
+datosx2014 <- (x2014 %>% select(Depreg, Mupreg, Mesreg, TipoIns, AÃ±oreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, AÃ±oocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
+datosx2015 <- (x2015 %>% select(Depreg, Mupreg, Mesreg, TipoIns, AÃ±oreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, AÃ±oocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
+datosx2016 <- (x2016 %>% select(Depreg, Mupreg, Mesreg, TipoIns, AÃ±oreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, AÃ±oocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
+datosx2017 <- (x2017 %>% select(Depreg, Mupreg, Mesreg, TipoIns, AÃ±oreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, AÃ±oocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
+datosx2018 <- (x2018 %>% select(Depreg, Mupreg, Mesreg, TipoIns, AÃ±oreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, AÃ±oocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
+datosx2019 <- (x2019 %>% select(Depreg, Mupreg, Mesreg, TipoIns, AÃ±oreg, Depocu,Mupocu,Areag,Libras, Onzas, Diaocu, Mesocu, AÃ±oocu, Sexo, Tipar, ViaPar, Edadp, Paisrep,Deprep,Muprep, PuebloPP, Escivp,Paisnacp,Depnap,Mupnap, Naciop, Escolap, Ocupap, Edadm, Paisrem, Deprem, Muprem, PuebloPM, Escivm, Paisnacm, Depnam,Mupnam,Naciom, Escolam, Ocupam, Asisrec, Sitioocu, Tohite, Tohinm, Tohivi))
 view(datosx2011)
 
 totx2009 <- datosx2009 %>%
@@ -191,20 +191,20 @@ total$Libras<- as.numeric(factor(total$Libras))
 total$Libras <- ifelse(total$Libras >=99, 0, total$Libras)
 total$Onzas<- as.numeric(factor(total$Onzas))
 total$Onzas <- ifelse(total$Onzas>=99, 0, total$Onzas)
-total$Añoocu<- as.numeric(factor(total$Añoocu))
+total$AÃ±oocu<- as.numeric(factor(total$AÃ±oocu))
 total$Tohite<- as.numeric(factor(total$Tohite))
 total$Tohite <- ifelse(total$Tohite >=99, 0, total$Tohite)
 total$Tohivi<- as.numeric(factor(total$Tohivi))
 total$Tohivi <- ifelse(total$Tohivi >=99, 0, total$Tohivi)
 total$Tohinm<- as.numeric(factor(total$Tohinm))
 total$Tohinm <- ifelse(total$Tohinm >=99, 0, total$Tohinm)
-total$Añoreg <- as.numeric(factor(total$Añoreg))                       
-total$Añoreg <- ifelse(total$Añoreg == 9, 2009, ifelse(total$Añoreg == 10, 2010, total$Añoreg))
+total$AÃ±oreg <- as.numeric(factor(total$AÃ±oreg))                       
+total$AÃ±oreg <- ifelse(total$AÃ±oreg == 9, 2009, ifelse(total$AÃ±oreg == 10, 2010, total$AÃ±oreg))
 #view(datosx2009)
 
 #Histograma de variables cuant
-#año de ocurrencia de embarazo
-hist(x= total$Añoocu, main=paste("Histograma de Añoocu"))
+#aÃ±o de ocurrencia de embarazo
+hist(x= total$AÃ±oocu, main=paste("Histograma de AÃ±oocu"))
 
 #peso de bebe en libras
 Librass <- as.numeric(levels(total$Libras))[total$Libras]
@@ -237,8 +237,8 @@ table(total$Mupreg)
 tab1(total$Mesreg, sort.group = "decreasing")
 #tipo de inscripcion
 tab1(total$TipoIns, sort.group = "decreasing")
-#año de registro
-tab1(total$Añoreg, sort.group = "decreasing")
+#aÃ±o de registro
+tab1(total$AÃ±oreg, sort.group = "decreasing")
 #departamento de ocurrencia
 tab1(total$Depocu, sort.group = "decreasing")
 #municipio de ocurrencia
@@ -384,7 +384,7 @@ nrow(g2)
 summary(g2)
 
 
-plotcluster(menoresomit1[,c(5,9,10,13,17,29,43,44,45)],km$cluster) #grafica la ubicaciÃ³n de los clusters
+plotcluster(menoresomit1[,c(5,9,10,13,17,29,43,44,45)],km$cluster) #grafica la ubicaciÃƒÂ³n de los clusters
 
 #la base de datos ha usar es menores
 menores<- menores %>% filter(Edadp >=10)
@@ -413,7 +413,18 @@ test<-datos[-trainRowsNumber,]
 #Arbol de clasificacion
 decisiontree <- train(ClasPeso ~ ., data=train, method="rpart", trControl = trainControl(method = "cv"), na.action= na.exclude)
 arbolModeloClasificacion<-rpart(ClasPeso~.,train,method = "class")
+plot(arbolModeloClasificacion);text(arbolModeloClasificacion)
+prp(arbolModeloClasificacion)
+rpart.plot(arbolModeloClasificacion)
+#Se crea el test y se clasifica
+prediccion <- predict(arbolModeloClasificacion, newdata = test[1:32])
 
+columnaMasAlta<-apply(prediccion, 1, function(x) colnames(prediccion)[which.max(x)])
+
+test$prediccion<-columnaMasAlta #Se le aÃƒÂ±ade al grupo de prueba el valor de la predicciÃƒÂ³n
+
+cfm<-confusionMatrix(as.factor(test$prediccion),as.factor(test$ClasPeso))
+cfm
 #NaiveBayes
 modelo<-naiveBayes(train$ClasPeso~., data=train)
 modelo 
