@@ -387,15 +387,25 @@ summary(g2)
 plotcluster(menoresomit1[,c(5,9,10,13,17,29,43,44,45)],km$cluster) #grafica la ubicaciÃ³n de los clusters
 
 #la base de datos ha usar es menores
-menores<- menores %>% filter(Edadp >=10)
+menores<- total %>% filter(Edadm <= 18, Edadm >=10)
 
+menores<- menores %>% filter(Edadp >=10)
+completeFun <- function(data, desiredCols) {
+  completeVec <- complete.cases(data[, desiredCols])
+  return(data[completeVec, ])
+}
+menores<- completeFun(menores, c("Libras", "Onzas","Muprem", "Naciom"))
+#lapply(menores,function(x) { length(which(is.na(x)))})
+#datos <- datos[,colSums(is.na(datos))==0]
 menores$OnzasLib <- menores$Onzas * 0.0625
 menores$pesoBebe <- menores$Libras + menores$OnzasLib
 menores$ClasPeso <- ifelse(menores$pesoBebe <=5.29109, "BajoPeso", ifelse(menores$pesoBebe <=9.47988, "PesoIdeal", "SobrePeso"))
 menores$ClasPeso <- as.factor(menores$ClasPeso)
 set.seed(123)
 porciento<-0.7
+#Se remueve libras, onzas, onzasLib y pesobebe
 datos<-subset(menores, select = -c(9,10,46,47) )
+datos <- datos[,colSums(is.na(datos))==0]
 datos$Paisnacm <-as.factor(datos$Paisnacm)
 datos$Escolam <-as.factor(datos$Escolam)
 datos$Paisrem <-as.factor(datos$Paisrem)
@@ -404,32 +414,32 @@ datos$Paisnacp <-as.factor(datos$Paisnacp)
 datos$Paisrep <-as.factor(datos$Paisrep)
 datos$ViaPar <-as.factor(datos$ViaPar)
 datos$TipoIns <-as.factor(datos$TipoIns)
-#20 escivp
-datos<-subset(datos, select = -c(1:3,8:10,20,21,24,26,41) )
+#Eliminacion de ViaPar y TipoIns
+datos<-subset(datos, select = -c(4) )
+datos<-subset(datos, select = -c(12) )
 trainRowsNumber<-sample(1:nrow(datos),porciento*nrow(datos))
 train<-datos[trainRowsNumber,]
 test<-datos[-trainRowsNumber,]
 
-#Arbol de clasificacion
-decisiontree <- train(ClasPeso ~ ., data=train, method="rpart", trControl = trainControl(method = "cv"), na.action= na.exclude)
-arbolModeloClasificacion<-rpart(ClasPeso~.,train,method = "class")
-plot(arbolModeloClasificacion);text(arbolModeloClasificacion)
-prp(arbolModeloClasificacion)
-rpart.plot(arbolModeloClasificacion)
-#Se crea el test y se clasifica
-prediccion <- predict(arbolModeloClasificacion, newdata = test[1:32])
-
-columnaMasAlta<-apply(prediccion, 1, function(x) colnames(prediccion)[which.max(x)])
-
-test$prediccion<-columnaMasAlta #Se le aÃ±ade al grupo de prueba el valor de la predicciÃ³n
-
-cfm<-confusionMatrix(as.factor(test$prediccion),as.factor(test$ClasPeso))
-cfm
-#NaiveBayes
+#-----------------------------------------------
+#NaiveBayes con todas las variabless
 modelo<-naiveBayes(train$ClasPeso~., data=train)
 modelo 
 summary(modelo)
-predBayes<-predict(modelo, newdata = test[,1:32])
+predBayes<-predict(modelo, newdata = test[,1:40])
 cm<-caret::confusionMatrix(predBayes,test$ClasPeso)
-cm #La eficiencia del Naive Bayes es de 0.7734
+cm #La eficiencia del Naive Bayes es de 0.7062
+#-----------------------------------------------
+#NaiveBayes con menos variables
+datos<-subset(datos, select = -c(1:3,7:9,18,19,22,24,39) )
+trainRowsNumber<-sample(1:nrow(datos),porciento*nrow(datos))
+train<-datos[trainRowsNumber,]
+test<-datos[-trainRowsNumber,]
+modelo<-naiveBayes(train$ClasPeso~., data=train)
+modelo 
+summary(modelo)
+predBayes<-predict(modelo, newdata = test[,1:29])
+cm<-caret::confusionMatrix(predBayes,test$ClasPeso)
+cm #La eficiencia del Naive Bayes es de 0.762
+#-----------------------------------------------
 
